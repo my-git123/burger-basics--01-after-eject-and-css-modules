@@ -32,7 +32,7 @@ const Burgerbuilder = ({ings,
         // const res = await axios.get('https://healthyburgersapp.firebaseio.com/ingredients.json');
         //    setIngredients(res.data);
         // }
-        // fetchData();
+        // fetchData(); 
         fetchIngredients();
        },[]);
 
