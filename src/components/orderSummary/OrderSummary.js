@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '../ui/button/Button';
 
 const OrderSummary = ({ingredients, purchaseCancelled, purchaseContinued,price}) => {
-    console.log('Order summary data -'+JSON.stringify(ingredients));
+    //console.log('Order summary data -'+JSON.stringify(ingredients));
     const ingredientSummary = Object.keys(ingredients)
     .map(ingKey => {
         return (

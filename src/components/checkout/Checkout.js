@@ -1,41 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useHistory,useLocation,Route } from 'react-router-dom';
+import { useHistory,Route,Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CheckoutSummary from '../order/CheckoutSummary';
 import ContactData from '../checkout/contactData/ContactData';
 
-const Checkout = ({match,ings}) => {
+
+const Checkout = ({match,ings, initiatePurchase,purchasing}) => {
     let history = useHistory();
-    let location = useLocation();
-//   const [ingredients, setIngredients] = useState({
-//       salad:0,
-//       cheese:0,
-//       bacon:0,
-//       meat:0
-//   });
-//   const [price, setPrice] = useState(0);
+    // useEffect(() => {
+    //     console.log('abrakadabra');
+    //     console.log(purchasing);
+    //     initiatePurchase();
+    // },[]);
 
-//   useEffect(() => {
-//       //console.log('sujeet');
-//       const query = new URLSearchParams(location.search);
-//       const ingredients = {};
-//       let bprice = 0;
-//       for ( let param of query.entries()) {
-//           if (param[0] === 'price') {
-//               bprice = param[1];
-//               //console.log(param[1]);
-//           } else {
-//             ingredients[param[0]] = +param[1];
-//           }
-//     }
-//           //console.log(bprice);
-//       setIngredients(ingredients);
-//       setPrice(bprice);
-//       console.log(price);
-         
-//     },[]);
-
+    
   const handleCheckoutCancel = () => {
       history.goBack();
   }
@@ -44,26 +23,37 @@ const Checkout = ({match,ings}) => {
       history.replace('/checkout/contact-data');
   }
 
-    return (
-        <div>
-            <CheckoutSummary 
-            ingredients = {ings}
-            checkOutContinue = {handleCheckoutContinue}
-            checkOutCancel = {handleCheckoutCancel}
-            />
-            <Route path = {match.path +'/contact-data'} 
-                   component ={ContactData} />
-        </div>
-    )
-}
+  let checkoutSummary = <Redirect to = "/" />
+  if (ings) {
+      const purchaseRedirect = purchasing ? <Redirect to = '/'/> : null;
+       
+      checkoutSummary = ( 
+                        <div>
+                        {purchaseRedirect}
+                        <CheckoutSummary 
+                          ingredients = {ings}
+                          checkOutContinue = {handleCheckoutContinue}
+                          checkOutCancel = {handleCheckoutCancel}/>
+
+                          <Route path = {match.path +'/contact-data'} 
+                          component ={ContactData} />
+                          </div>
+                          );
+        }
+
+         return  checkoutSummary;
+          
+    }
 
 Checkout.propTypes = {
-    ings: PropTypes.object.isRequired
+    ings: PropTypes.object.isRequired,
+    purchasing: PropTypes.bool.isRequired
     
 }
 
 const mapStateToProps = state => ({
     ings: state.burgerBuilderReducer.ingredients,
+    purchasing:state.orderReducer.purchasing
     //price:state.burgerBuilderReducer.price
 
 });

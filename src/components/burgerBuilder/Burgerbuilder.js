@@ -8,6 +8,7 @@ import Modal from '../../components/ui/modal/Modal';
 import OrderSummary from '../../components/orderSummary/OrderSummary';
 //import axios from '../../axios-orders';
 import Spinner from '../ui/spinner/Spinner';
+import { initiatePurchase } from '../../actions/orderAction';
 import { addIngredient, removeIngredient, fetchIngredients} from '../../actions/burgerBuilderAction';
 
 
@@ -15,39 +16,26 @@ const Burgerbuilder = ({ings,
                        addIngredient,
                        removeIngredient,
                        fetchIngredients,
+                       initiatePurchase,
                        price,
                        error
                        }) => {
+let history = useHistory();
+const[purchasing,setPurchasing] = useState(false);
     
-    // const [ingredients, setIngredients] = useState({
-    //     cheese:0,
-    //     salad:0,
-    //     meat:0,
-    //     bacon:0,
-    // });
-
-        useEffect(() => {
-        console.log('Calling use Effect function..');
-        // const fetchData = async () => {
-        // const res = await axios.get('https://healthyburgersapp.firebaseio.com/ingredients.json');
-        //    setIngredients(res.data);
-        // }
-        // fetchData(); 
-        fetchIngredients();
+           useEffect(() => {
+                       fetchIngredients();
+               //console.log('Calling use Effect function..');
        },[]);
 
-    //const [price,setPrice] = useState(4);
-    let history = useHistory();
-    const[purchasing,setPurchasing] = useState(false);
-    const [loading,setLoading] = useState(false);
-    
-    const updatePurchaseAble = (ings) => {
-        const sum = Object.keys(ings).map(ingKey => ings[ingKey])
+          
+    const updatePurchaseAble = (ingredients) => {
+        const sum = Object.keys(ingredients).map(ingKey => ingredients[ingKey])
         .reduce((sum,el) => {
             return sum + el
         }, 0);
         return sum > 0;
-    }
+    };
 
     const handlePurchase = () => {
         setPurchasing(true);
@@ -58,84 +46,63 @@ const Burgerbuilder = ({ings,
     }
 
     const  handlePurchaseContinue = () => {
-    //     const queryParams = [];
-    // for ( let i in ings) {
-    //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(ings[i]));
-    //     }
-
-    // queryParams.push('price=' + price);
-    //     const queryString = queryParams.join('&');
-    //        history.push({
-    //            pathname: '/checkout',
-    //            search: '?' + queryString
-    //         });
-    history.push('/checkout');
-}
-    //  const addIngredient = (type) => { 
-    //   setIngredients(prevValue => { 
-    //     return {...prevValue,
-    //    [type]: prevValue[type]+ 1
-    //   }});
-                         
-    //   const changePrice = INGREDIENTS_PRICE[type];
-    //       setPrice(changePrice + price);
-    //  }
-   
-    // const removeIngredient = (type) => {
-    //     setIngredients(prevValue => {
-    //         return {
-    //                 ...prevValue,
-    //                  [type]: prevValue[type] - 1
-    //             }
-    //         });
-                         
-    //         const newPrice = INGREDIENTS_PRICE[type];
-    //         setPrice(price - newPrice);
-    //     }
-
+      initiatePurchase();
+       history.push('/checkout');
+   }
     const checkIngredients = {...ings};
         
         for (let i in checkIngredients) {
              checkIngredients[i]= checkIngredients[i] <= 0
          }
-       console.log('Calling return'+JSON.stringify(ings));
-    return (
-        <Fragment>
-        <Modal show = {purchasing} modalClosed = {handlePurchaseCancel} >
-        {loading ? <Spinner /> : <Fragment>
-          <OrderSummary 
-          ingredients = {ings}
-          price = {price}
-          purchaseCancelled = {handlePurchaseCancel}
-          purchaseContinued = {handlePurchaseContinue}
-          />
-          </Fragment>
-        }
-        </Modal>
-        {ings ? (
-            <Fragment>
-            <Burger ingredients = {ings} />
-            <BuildControls ingredientAdded = {addIngredient}
+       //console.log('Calling return'+JSON.stringify(ings));
+
+    let orderSummary = null;
+    let burger = error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
+
+  if (ings) {
+    burger = (
+      <Fragment>
+        <Burger ingredients={ings} />
+        <BuildControls ingredientAdded = {addIngredient}
                        ingredientRemoved = {removeIngredient}
                        disableControl = {checkIngredients}
                        currentPrice = {price}
                        purchaseAble = {updatePurchaseAble(ings)}
                        ordered = {handlePurchase}
+           />
+     </Fragment>
+    );
+    orderSummary = (
+        <OrderSummary 
+         ingredients = {ings}
+         price = {price}
+         purchaseCancelled = {handlePurchaseCancel}
+         purchaseContinued = {handlePurchaseContinue}
          />
-            </Fragment>
-        ) : <Spinner />}
-                
-        </Fragment>
-    )
+    );
+  }
+      
+    return (
+            <Fragment>
+              <Modal show = {purchasing} 
+                     modalClosed = {handlePurchaseCancel}>
+                                   
+                           {orderSummary}
+              </Modal>
+              {burger}
+           </Fragment>
+        
+    );
 }
 
 Burgerbuilder.propTypes = {
 addIngredient:PropTypes.func.isRequired,
 removeIngredient:PropTypes.func.isRequired,
-//setIngredients:PropTypes.func.isRequired,
+initiatePurchase:PropTypes.func.isRequired,
 fetchIngredients:PropTypes.func.isRequired,
 ings:PropTypes.object.isRequired,
-price:PropTypes.number.isRequired
+price:PropTypes.number.isRequired,
+error: PropTypes.bool.isRequired
 }
 const mapStateToProps = state => ({
     ings: state.burgerBuilderReducer.ingredients,
@@ -143,4 +110,4 @@ const mapStateToProps = state => ({
     error: state.burgerBuilderReducer.error
 });
 
-export default connect(mapStateToProps,{addIngredient, removeIngredient, fetchIngredients })(Burgerbuilder);
+export default connect(mapStateToProps,{addIngredient, removeIngredient, fetchIngredients, initiatePurchase })(Burgerbuilder);

@@ -6,8 +6,9 @@ import classes from './contactData.css';
 import axios from '../../../axios-orders';
 import Spinner from '../../ui/spinner/Spinner';
 import Input from '../../ui/input/Input';
+import { purchaseOrder } from '../../../actions/orderAction';
 
-const ContactData = ({ings, price,history}) => {
+const ContactData = ({ings, price,history, loading, purchaseOrder}) => {
    const [contactInfo, setContactInfo] = useState({
     name:'' ,
     email:'' ,
@@ -17,7 +18,7 @@ const ContactData = ({ings, price,history}) => {
     delieveryMethod: ''
       
    });
-   const [loading, setLoading] = useState(false);
+   //const [loading, setLoading] = useState(false);
    const {name,email, city, street, postalCode,deliveryMethod} = contactInfo;
 
    const handleChange = event => {
@@ -27,21 +28,23 @@ const ContactData = ({ings, price,history}) => {
    const handleorder = (event) => {
        event.preventDefault();
        //console.log(ingredients);
-       setLoading(true);
+       //setLoading(true);
         //alert('You want to continue with your order');
+        
         const order = {
             ingredients: ings,
             price:price,
             orderData: contactInfo
          }
-        axios.post('/orders.json',order)
-        .then(res => {setLoading(false);
-            history.push('/');
-            //setPurchasing(false);
-        })
-        .catch(error => {setLoading(false);
-            //setPurchasing(false);
-        });
+         purchaseOrder(order);
+        // axios.post('/orders.json',order)
+        // .then(res => {setLoading(false);
+        //     history.push('/');
+        //     //setPurchasing(false);
+        // })
+        // .catch(error => {setLoading(false);
+        //     //setPurchasing(false);
+        // });
    }
     
     return (
@@ -100,13 +103,16 @@ const ContactData = ({ings, price,history}) => {
 
 ContactData.propTypes = {
   ings: PropTypes.object.isRequired,
-  price: PropTypes.number.isRequired
+  price: PropTypes.number.isRequired,
+  loading: PropTypes.bool.isRequired,
+  purchaseOrder:PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
     ings: state.burgerBuilderReducer.ingredients,
-    price:state.burgerBuilderReducer.price
+    price:state.burgerBuilderReducer.price,
+    loading:state.orderReducer.loading
 
 });
 
-export default connect(mapStateToProps)(ContactData);
+export default connect(mapStateToProps, { purchaseOrder})(ContactData);
