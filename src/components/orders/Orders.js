@@ -6,7 +6,7 @@ import { fetchOrders} from '../../actions/orderAction';
 import Spinner from '../ui/spinner/Spinner';
 //import axios from '../../axios-orders';
 
-const Orders = ({orders,loading,fetchOrders}) => {
+const Orders = ({orders,loading,fetchOrders, token, userId}) => {
 //  const [orderState, setOrderState] = useState({
 //      orders:[],
 //      loading: true
@@ -14,7 +14,7 @@ const Orders = ({orders,loading,fetchOrders}) => {
  //const [loading,setLoading] = useState(ftrue);
 
 useEffect(() => {
-    fetchOrders();
+    fetchOrders(token,userId);
 },[]);
 
     // useEffect(() => {
@@ -48,13 +48,17 @@ useEffect(() => {
 
 Orders.propTypes = {
   fetchOrders:PropTypes.func.isRequired,
-  orders: PropTypes.object.isRequired,
-  loading:PropTypes.bool.isRequired
+  orders: PropTypes.array.isRequired,
+  loading:PropTypes.bool.isRequired,
+  token: PropTypes.string.isRequired,
+  userId:PropTypes.string.isRequired
 }
 
 const mapStateToProps = state =>({
     orders: state.orderReducer.orders,
-    loading: state.orderReducer.loading
+    loading: state.orderReducer.loading,
+    token: state.authReducer.token,
+    userId:state.authReducer.userId
 });
 
 export default connect(mapStateToProps,{fetchOrders})(Orders);

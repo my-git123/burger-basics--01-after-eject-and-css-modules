@@ -14,6 +14,7 @@ const BuildControls = ({ingredientAdded,
     disableControl,
     currentPrice,
     purchaseAble,
+    isAuth,
     ordered
            }) => {
     return (
@@ -30,7 +31,8 @@ const BuildControls = ({ingredientAdded,
 
         <button className = {classes.OrderButton} 
                 disabled = {!purchaseAble}
-                onClick = {ordered}>Order Now</button>
+                onClick = {ordered}>{isAuth ? 'Order Now' : 
+                'Plz Sign Up to Order'}</button>
            
         </div>
     )
@@ -42,7 +44,8 @@ BuildControls.propTypes = {
     disableControl:PropTypes.object.isRequired,
     currentPrice: PropTypes.number.isRequired,
     purchaseAble:PropTypes.bool.isRequired,
-    ordered:PropTypes.func.isRequired
+    ordered:PropTypes.func.isRequired,
+    isAuth:PropTypes.bool.isRequired
 }
 
 export default BuildControls;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { useHistory,Route,Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -46,7 +46,7 @@ const Checkout = ({match,ings, initiatePurchase,purchasing}) => {
     }
 
 Checkout.propTypes = {
-    ings: PropTypes.object.isRequired,
+    ings: PropTypes.object,
     purchasing: PropTypes.bool.isRequired
     
 }

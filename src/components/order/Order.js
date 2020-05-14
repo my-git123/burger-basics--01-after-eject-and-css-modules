@@ -34,7 +34,7 @@ const Order = ({ingredients,price}) => {
 }
 
 Order.propTypes = {
-    ingredients:PropTypes.object.isRequired,
+    ingredients:PropTypes.object,
     price:PropTypes.number.isRequired
 }
 

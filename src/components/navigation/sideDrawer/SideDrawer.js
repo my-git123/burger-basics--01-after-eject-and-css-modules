@@ -5,7 +5,7 @@ import NavigationItems from '../navigationItems/NavigationItems';
 import Backdrop from '../../ui/modal/backdrop/Backdrop';
 import classes from './sideDrawer.css';
 
-const SideDrawer = ({closed,open}) => {  
+const SideDrawer = ({closed,open,isAuth}) => {  
     let attachedClasses = [classes.SideDrawer, classes.Close];
     if (open) {
     attachedClasses = [classes.SideDrawer, classes.Open];
@@ -19,7 +19,7 @@ const SideDrawer = ({closed,open}) => {
             <Logo />
           </div>
             <nav>
-               <NavigationItems />
+               <NavigationItems isAuthenticated = {isAuth} />
             </nav>
           </div>
         </Fragment>
@@ -29,7 +29,8 @@ const SideDrawer = ({closed,open}) => {
 
 SideDrawer.propTypes = {
     closed: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
+    open: PropTypes.bool.isRequired,
+    isAuth: PropTypes.bool.isRequired
 
 }
 

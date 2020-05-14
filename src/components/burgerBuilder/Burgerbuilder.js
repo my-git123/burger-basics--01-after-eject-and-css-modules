@@ -9,6 +9,7 @@ import OrderSummary from '../../components/orderSummary/OrderSummary';
 //import axios from '../../axios-orders';
 import Spinner from '../ui/spinner/Spinner';
 import { initiatePurchase } from '../../actions/orderAction';
+import { setAuthRedirectPath } from '../../actions/authAction';
 import { addIngredient, removeIngredient, fetchIngredients} from '../../actions/burgerBuilderAction';
 
 
@@ -18,6 +19,8 @@ const Burgerbuilder = ({ings,
                        fetchIngredients,
                        initiatePurchase,
                        price,
+                       isAuthenticated,
+                       setAuthRedirectPath,
                        error
                        }) => {
 let history = useHistory();
@@ -38,7 +41,14 @@ const[purchasing,setPurchasing] = useState(false);
     };
 
     const handlePurchase = () => {
+      if (isAuthenticated) {
         setPurchasing(true);
+      } else {
+        setAuthRedirectPath('/checkout');
+        history.push('/auth');
+        
+      }
+        
     }
 
     const handlePurchaseCancel = () => {
@@ -69,6 +79,7 @@ const[purchasing,setPurchasing] = useState(false);
                        currentPrice = {price}
                        purchaseAble = {updatePurchaseAble(ings)}
                        ordered = {handlePurchase}
+                       isAuth = {isAuthenticated}
            />
      </Fragment>
     );
@@ -100,14 +111,21 @@ addIngredient:PropTypes.func.isRequired,
 removeIngredient:PropTypes.func.isRequired,
 initiatePurchase:PropTypes.func.isRequired,
 fetchIngredients:PropTypes.func.isRequired,
-ings:PropTypes.object.isRequired,
+ings:PropTypes.object,
 price:PropTypes.number.isRequired,
-error: PropTypes.bool.isRequired
+error: PropTypes.bool.isRequired,
+isAuthenticated:PropTypes.bool.isRequired,
+setAuthRedirectPath: PropTypes.func.isRequired
 }
 const mapStateToProps = state => ({
     ings: state.burgerBuilderReducer.ingredients,
     price: state.burgerBuilderReducer.price,
-    error: state.burgerBuilderReducer.error
+    error: state.burgerBuilderReducer.error,
+    isAuthenticated: state.authReducer.token !== null
 });
 
-export default connect(mapStateToProps,{addIngredient, removeIngredient, fetchIngredients, initiatePurchase })(Burgerbuilder);
+export default connect(mapStateToProps,{addIngredient, 
+                                        removeIngredient,
+                                        fetchIngredients,
+                                        initiatePurchase,
+                                        setAuthRedirectPath })(Burgerbuilder);

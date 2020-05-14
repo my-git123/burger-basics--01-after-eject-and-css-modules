@@ -4,7 +4,7 @@ import Burger from '../burger/Burger';
 import classes from './checkoutSummary.css';
 import Button from '../ui/button/Button';
 
-const CheckoutSummary = ({ingredients, btnType, checkOutCancel, checkOutContinue}) => {
+const CheckoutSummary = ({ingredients, checkOutCancel, checkOutContinue}) => {
     return (
         <div className = {classes.CheckoutSummary}>
             <h1>Its delicious..</h1>
@@ -23,7 +23,7 @@ const CheckoutSummary = ({ingredients, btnType, checkOutCancel, checkOutContinue
 
 CheckoutSummary.propTypes = {
     ingredients : PropTypes.object.isRequired,
-    btnType:PropTypes.string.isRequired,
+    //btnType:PropTypes.string.isRequired,
     checkOutCancel:PropTypes.func.isRequired,
     checkOutContinue:PropTypes.func.isRequired
 }

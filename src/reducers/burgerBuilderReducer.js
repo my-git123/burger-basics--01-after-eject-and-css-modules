@@ -1,12 +1,13 @@
 import { ADD_INGREDIENT,
          REMOVE_INGREDIENT, 
-         FETCH_INGREDIENTS,
+         SET_INGREDIENTS,
          ERROR_INGREDIENTS} from '../actions/types';
 
 const initialState = {
-    ingredients: {},
+    ingredients:null,
     error: false,
-    price:4
+    price:4,
+    building:false
 };
 const INGREDIENTS_PRICE = {
     salad:1,
@@ -25,6 +26,7 @@ export default function(state = initialState, action){
                     ...state.ingredients,
                     [payload]:state.ingredients[payload] + 1
                 },
+                building:true,
                 price: state.price + INGREDIENTS_PRICE[payload]
 
             };
@@ -35,12 +37,17 @@ export default function(state = initialState, action){
                     ...state.ingredients,
                     [payload]:state.ingredients[payload] - 1
                 },
+                building:true,
                 price: state.price - INGREDIENTS_PRICE[payload]
             }
-        case FETCH_INGREDIENTS:
+        case SET_INGREDIENTS:
             return {
                 ...state,
-                ingredients: payload,
+                ingredients: {
+                    ...state.ingredients,
+                    ...payload},
+                price:4,
+                building:false,
                 error:false
             }
         case ERROR_INGREDIENTS:

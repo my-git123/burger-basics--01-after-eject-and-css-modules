@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import classes from './input.css';
 
 const Input = props => {
     let inputElement = null;
-    switch(props.inputType) {
+    switch(props.inputtype) {
         case ('input'):
             inputElement = <input className = {classes.InputElement}{...props} />
             break;
@@ -36,4 +36,4 @@ Input.propTypes = {
 
 }
 
-export default Input
+export default Input;

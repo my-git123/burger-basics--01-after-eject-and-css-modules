@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from '../../ui/button/Button';
 import classes from './contactData.css';
-import axios from '../../../axios-orders';
+//import axios from '../../../axios-orders';
 import Spinner from '../../ui/spinner/Spinner';
 import Input from '../../ui/input/Input';
 import { purchaseOrder } from '../../../actions/orderAction';
 
-const ContactData = ({ings, price,history, loading, purchaseOrder}) => {
+const ContactData = ({ings, price,token, loading, purchaseOrder, userId}) => {
    const [contactInfo, setContactInfo] = useState({
     name:'' ,
     email:'' ,
@@ -34,9 +34,10 @@ const ContactData = ({ings, price,history, loading, purchaseOrder}) => {
         const order = {
             ingredients: ings,
             price:price,
-            orderData: contactInfo
+            orderData: contactInfo,
+            userId: userId
          }
-         purchaseOrder(order);
+         purchaseOrder(order,token);
         // axios.post('/orders.json',order)
         // .then(res => {setLoading(false);
         //     history.push('/');
@@ -53,40 +54,40 @@ const ContactData = ({ings, price,history, loading, purchaseOrder}) => {
             <h4><strong>Please Enter Your Contact Information</strong></h4>
             {loading ? <Spinner /> : (<Fragment>
             <form onSubmit = {handleorder}>
-              <Input inputType = "input" 
+              <Input inputtype = "input" 
                      type = "text" 
                      name = "name" 
                      placeholder = "Your Name"
                      value = {name} 
                      onChange = {event => handleChange(event)}
                      required />
-              <Input inputType = "input" 
+              <Input inputtype = "input" 
                      type = "email" 
                      name = "email" 
                      placeholder = "Your E-mail"
                      value = {email} 
                      onChange = {event => handleChange(event)}
                      required />
-              <Input inputType = "input" 
+              <Input inputtype = "input" 
                      type = "text" 
                      name = "street"
                      placeholder = "Street"
                      value = {street} 
                      onChange = {event => handleChange(event)} />
-                <Input inputType = "input" 
+                <Input inputtype = "input" 
                      type = "text" 
                      name = "city"
                      placeholder = "City"
                      value = {city} 
                      onChange = {event => handleChange(event)} />
-              <Input inputType = "input" 
+              <Input inputtype = "input" 
                      type = "text" 
                      name = "postalCode" 
                      placeholder = "Postal Code"
                      value = {postalCode} 
                      onChange = {event => handleChange(event)}
                      required />
-            <Input inputType = "select" 
+            <Input inputtype = "select" 
                      type = "text" 
                      name = "deliveryMethod" 
                      placeholder = "Select delivery method"
@@ -105,13 +106,17 @@ ContactData.propTypes = {
   ings: PropTypes.object.isRequired,
   price: PropTypes.number.isRequired,
   loading: PropTypes.bool.isRequired,
-  purchaseOrder:PropTypes.func.isRequired
+  purchaseOrder:PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
+  userId:PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({
     ings: state.burgerBuilderReducer.ingredients,
     price:state.burgerBuilderReducer.price,
-    loading:state.orderReducer.loading
+    loading:state.orderReducer.loading,
+    token: state.authReducer.token,
+    userId: state.authReducer.userId
 
 });
 

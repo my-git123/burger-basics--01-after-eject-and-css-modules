@@ -13,7 +13,7 @@ const DrawerToggle = ({clicked}) => {
 }
 
 DrawerToggle.propTypes = {
-    clicked: PropTypes.bool.isRequired
+    clicked: PropTypes.func.isRequired
 }
 
 export default DrawerToggle;
